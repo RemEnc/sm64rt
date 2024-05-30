@@ -133,4 +133,10 @@ extern const Gfx whomp_seg6_dl_06020038[];
 extern const struct Animation *const whomp_seg6_anims_06020A04[];
 extern const Collision whomp_seg6_collision_06020A0C[];
 
+#include "koopa_with_shell/geo_header.h"
+
+#include "koopa_without_shell/geo_header.h"
+
+#include "chain_chomp/geo_header.h"
+
 #endif

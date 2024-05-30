@@ -85,7 +85,7 @@ struct MacroPreset MacroObjectPresets[] = {
     {bhvBreakableBox, MODEL_BREAKABLE_BOX, 0},
     {bhvBreakableBox, MODEL_BREAKABLE_BOX, 1},
     {bhvPushableMetalBox, MODEL_METAL_BOX, 0},
-    {bhvBreakableBoxSmall, MODEL_BREAKABLE_BOX_SMALL, 0},
+    {bhvBreakableBoxSmall, MODEL_BREAKABLE_BOX, 1},
     {bhvFloorSwitchHiddenObjects, MODEL_PURPLE_SWITCH, 0},
     {bhvHiddenObject, MODEL_BREAKABLE_BOX, 0},
     {bhvHiddenObject, MODEL_BREAKABLE_BOX, 1}, // unused
@@ -100,7 +100,7 @@ struct MacroPreset MacroObjectPresets[] = {
     {bhvThwomp2, MODEL_THWOMP, 0}, // unused
     {bhvFireSpitter, MODEL_BOWLING_BALL, 0},
     {bhvFlyGuy, MODEL_FLYGUY, 1},
-    {bhvJumpingBox, MODEL_BREAKABLE_BOX, 0},
+    {bhvJumpingBox, MODEL_BREAKABLE_BOX_SMALL, 0},
     {bhvTripletButterfly, MODEL_BUTTERFLY, 0},
     {bhvTripletButterfly, MODEL_BUTTERFLY, 4},
     {bhvYellowCoin, MODEL_YELLOW_COIN, 0},

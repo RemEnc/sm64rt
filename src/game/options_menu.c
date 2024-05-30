@@ -165,6 +165,7 @@ static const u8 bindStr[][32] = {
     { TEXT_BIND_C_DOWN },
     { TEXT_BIND_C_LEFT },
     { TEXT_BIND_C_RIGHT },
+    { TEXT_BIND_DPAD_RIGHT },
     { TEXT_BIND_UP },
     { TEXT_BIND_DOWN },
     { TEXT_BIND_LEFT },

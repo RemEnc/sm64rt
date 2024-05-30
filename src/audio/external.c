@@ -460,7 +460,7 @@ u8 sMaxChannelsForSoundBank[SOUND_BANK_COUNT] = { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
 #define BANK27_SIZE 0x40
 #endif
 u8 sNumSoundsPerBank[SOUND_BANK_COUNT] = {
-    0x70, 0x30, BANK27_SIZE, 0x80, 0x20, 0x80, 0x20, BANK27_SIZE, 0x80, 0x80,
+    0xFF, 0xFF, BANK27_SIZE, 0xFF, 0xFF, 0xFF, 0xFF, BANK27_SIZE, 0xFF, 0xFF,
 };
 #undef BANK27_SIZE
 

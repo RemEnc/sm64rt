@@ -56,6 +56,7 @@ extern const GeoLayout breakable_box_small_geo[];
 extern const Gfx breakable_box_seg8_dl_08012C30[];
 extern const Gfx breakable_box_seg8_dl_08012CD8[];
 extern const Gfx breakable_box_seg8_dl_08012D20[];
+extern const Gfx breakable_box_small_dl[];
 extern const Gfx breakable_box_seg8_dl_08012D48[];
 extern const Collision breakable_box_seg8_collision_08012D70[];
 
@@ -202,5 +203,11 @@ extern const Collision purple_switch_seg8_collision_0800C7A8[];
 extern const GeoLayout test_platform_geo[];
 extern const Gfx unknown_seg8_dl_08026260[];
 extern const Collision unknown_seg8_collision_080262F8[];
+
+#include "goomba/geo_header.h"
+
+#include "koopa_shell/geo_header.h"
+
+#include "bobomb/geo_header.h"
 
 #endif

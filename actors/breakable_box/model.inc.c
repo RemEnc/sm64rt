@@ -16,6 +16,10 @@ ALIGNED8 static const u8 breakable_box_seg8_texture_08012290[] = {
 #include "actors/breakable_box/cork_box_surface.rgba16.inc.c"
 };
 
+u8 breakable_box_small_rgba16[] = {
+	#include "actors/breakable_box/small_crate.rgba16.inc.c"
+};
+
 // 0x08012A90
 static const Vtx breakable_box_seg8_vertex_08012A90[] = {
     {{{  -100,      0,   -100}, 0, {   992,      0}, {0x81, 0x00, 0x00, 0xff}}},
@@ -96,6 +100,14 @@ const Gfx breakable_box_seg8_dl_08012D20[] = {
 const Gfx breakable_box_seg8_dl_08012D48[] = {
     gsSPDisplayList(breakable_box_seg8_dl_08012CD8),
     gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, breakable_box_seg8_texture_08012290),
+    gsDPLoadSync(),
+    gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 32 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
+    gsSPBranchList(breakable_box_seg8_dl_08012C30),
+};
+
+const Gfx breakable_box_small_dl[] = {
+    gsSPDisplayList(breakable_box_seg8_dl_08012CD8),
+    gsDPSetTextureImage(G_IM_FMT_RGBA, G_IM_SIZ_16b, 1, breakable_box_small_rgba16),
     gsDPLoadSync(),
     gsDPLoadBlock(G_TX_LOADTILE, 0, 0, 32 * 32 - 1, CALC_DXT(32, G_IM_SIZ_16b_BYTES)),
     gsSPBranchList(breakable_box_seg8_dl_08012C30),

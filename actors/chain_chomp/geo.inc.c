@@ -1,22 +1,16 @@
-// 0x0D0005EC
+#include "src/game/envfx_snow.h"
+
 const GeoLayout chain_chomp_geo[] = {
-   GEO_SHADOW(SHADOW_CIRCLE_4_VERTS, 0x96, 200),
-   GEO_OPEN_NODE(),
-      GEO_SCALE(0x00, 16384),
-      GEO_OPEN_NODE(),
-         GEO_ANIMATED_PART(LAYER_OPAQUE, 0, 0, 0, NULL),
-         GEO_OPEN_NODE(),
-            GEO_ANIMATED_PART(LAYER_OPAQUE, 0, 0, 0, chain_chomp_seg6_dl_06024940),
-            GEO_ANIMATED_PART(LAYER_OPAQUE, 0, 0, 0, chain_chomp_seg6_dl_06024FC0),
-         GEO_CLOSE_NODE(),
-         GEO_ANIMATED_PART(LAYER_OPAQUE, 0, 0, 0, NULL),
-         GEO_OPEN_NODE(),
-            GEO_ANIMATED_PART(LAYER_OPAQUE, 0, 0, 0, chain_chomp_seg6_dl_06024240),
-            GEO_ANIMATED_PART(LAYER_OPAQUE, 0, 0, 0, chain_chomp_seg6_dl_06024D60),
-            GEO_ANIMATED_PART(LAYER_ALPHA, 0, 0, 0, chain_chomp_seg6_dl_06024B00),
-         GEO_CLOSE_NODE(),
-      GEO_CLOSE_NODE(),
-   GEO_CLOSE_NODE(),
-GEO_CLOSE_NODE(), //! more close than open nodes
-GEO_END(),
+	GEO_NODE_START(),
+	GEO_OPEN_NODE(),
+		GEO_ANIMATED_PART(LAYER_ALPHA, 0, 0, 0, chain_chomp_skl_root_mesh_layer_4),
+		GEO_OPEN_NODE(),
+			GEO_DISPLAY_LIST(LAYER_ALPHA, chain_chomp_jaw_lower1_skinned_mesh_layer_4),
+			GEO_ANIMATED_PART(LAYER_ALPHA, 0, 0, 0, chain_chomp_jaw_lower1_mesh_layer_4),
+			GEO_DISPLAY_LIST(LAYER_ALPHA, chain_chomp_jaw_upper1_skinned_mesh_layer_4),
+			GEO_ANIMATED_PART(LAYER_ALPHA, 0, 0, 0, chain_chomp_jaw_upper1_mesh_layer_4),
+		GEO_CLOSE_NODE(),
+		GEO_DISPLAY_LIST(LAYER_ALPHA, chain_chomp_material_revert_render_settings),
+	GEO_CLOSE_NODE(),
+	GEO_END(),
 };

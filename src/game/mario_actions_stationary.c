@@ -10,6 +10,7 @@
 #include "interaction.h"
 #include "level_update.h"
 #include "mario.h"
+#include "mario_actions_moving.h"
 #include "mario_actions_stationary.h"
 #include "mario_step.h"
 #include "memory.h"
@@ -562,7 +563,18 @@ s32 act_crouching(struct MarioState *m) {
     }
 
     if (m->input & INPUT_B_PRESSED) {
-        return set_mario_action(m, ACT_PUNCHING, 9);
+		set_mario_action(m, ACT_HANDSTAND_TRANSITION, 0);
+		m->vel[1] = 34.0f;
+        mario_set_forward_vel(m, 12.0f);
+		return 0;
+    }
+
+    if (m->controller->buttonPressed & R_TRIG) {
+        m->vel[1] = 19.0f;
+        mario_set_forward_vel(m, 32.0f);
+        play_mario_sound(m, SOUND_ACTION_TERRAIN_JUMP, 0);
+        play_sound(SOUND_ACTION_SPIN, m->marioObj->header.gfx.cameraToObject);
+        return set_mario_action(m, ACT_ROLL_AIR, 0);
     }
 
     stationary_ground_step(m);
@@ -1054,6 +1066,16 @@ s32 act_ground_pound_land(struct MarioState *m) {
         return set_mario_action(m, ACT_BUTT_SLIDE, 0);
     }
 
+    if (m->input & INPUT_A_PRESSED) {
+        return set_jumping_action(m, ACT_GROUND_POUND_JUMP, 0);
+    }
+
+    if (m->controller->buttonPressed & R_TRIG) {
+        mario_set_forward_vel(m, 60);
+        play_sound(SOUND_ACTION_SPIN, m->marioObj->header.gfx.cameraToObject);
+        return set_mario_action(m, ACT_ROLL, 0);
+    }
+
     landing_step(m, MARIO_ANIM_GROUND_POUND_LANDING, ACT_BUTT_SLIDE_STOP);
     return 0;
 }
@@ -1094,6 +1116,51 @@ s32 act_first_person(struct MarioState *m) {
     return 0;
 }
 
+s32 act_spin_pound_land(struct MarioState *m) {
+    m->actionState = 1;
+
+    if (m->actionTimer <= 8) {
+        if (m->input & INPUT_UNKNOWN_10) {
+            return drop_and_set_mario_action(m, ACT_SHOCKWAVE_BOUNCE, 0);
+        }
+
+        if (m->input & INPUT_OFF_FLOOR) {
+            return set_mario_action(m, ACT_FREEFALL, 0);
+        }
+
+        if (m->input & INPUT_ABOVE_SLIDE) {
+            return set_mario_action(m, ACT_BUTT_SLIDE, 0);
+        }
+
+        if (m->input & INPUT_A_PRESSED) {
+            return set_jumping_action(m, ACT_GROUND_POUND_JUMP, 0);
+        }
+
+        if (m->controller->buttonPressed & R_TRIG) {
+            mario_set_forward_vel(m, 60);
+            play_sound(SOUND_ACTION_SPIN, m->marioObj->header.gfx.cameraToObject);
+            return set_mario_action(m, ACT_ROLL, 0);
+        }
+
+        stationary_ground_step(m);
+        set_mario_animation(m, MARIO_ANIM_LAND_FROM_DOUBLE_JUMP);
+    } else {
+        if (m->input & INPUT_UNKNOWN_10) {
+            return set_mario_action(m, ACT_SHOCKWAVE_BOUNCE, 0);
+        }
+
+        if (m->input & (INPUT_NONZERO_ANALOG | INPUT_A_PRESSED | INPUT_OFF_FLOOR | INPUT_ABOVE_SLIDE)) {
+            return check_common_action_exits(m);
+        }
+
+        stopping_step(m, MARIO_ANIM_LAND_FROM_DOUBLE_JUMP, ACT_IDLE);
+    }
+
+    m->actionTimer++;
+
+    return 0;
+}
+
 s32 check_common_stationary_cancels(struct MarioState *m) {
     if (m->pos[1] < m->waterLevel - 100) {
         if (m->action == ACT_SPAWN_SPIN_LANDING) {
@@ -1113,6 +1180,76 @@ s32 check_common_stationary_cancels(struct MarioState *m) {
             update_mario_sound_and_camera(m);
             return drop_and_set_mario_action(m, ACT_STANDING_DEATH, 0);
         }
+    }
+    return 0;
+}
+
+s32 act_handstand(struct MarioState *m) {
+
+	if (m->input & INPUT_NONZERO_ANALOG) {
+        apply_landing_accel(m, 0.98f);
+    } else if (m->forwardVel >= 16.0f) {
+        apply_slope_decel(m, 2.0f);
+    } else {
+        m->vel[1] = 0.0f;
+    }
+
+    if (m->input & INPUT_UNKNOWN_10) {
+        return set_mario_action(m, ACT_SHOCKWAVE_BOUNCE, 0);
+    }
+
+    if (m->input & INPUT_FIRST_PERSON) {
+        return set_mario_action(m, ACT_HANDSTAND_TO_CROUCH, 1);
+    }
+
+    if (m->input & INPUT_OFF_FLOOR) {
+        return set_mario_action(m, ACT_FREEFALL, 0);
+    }
+
+	if (m->floor->normal.y < 0.2923717f || (m->input & INPUT_ABOVE_SLIDE)) {
+        return mario_push_off_steep_floor(m, ACT_DIVE_SLIDE, 0);
+    }
+
+	if (m->input & INPUT_Z_PRESSED) {
+        return set_mario_action(m, ACT_HANDSTAND_TO_CROUCH, 1);
+    }
+
+	if (m->input & INPUT_B_PRESSED) {
+        return set_mario_action(m, ACT_HANDSTAND_TO_CROUCH, 1);
+    }
+
+	if (m->input & INPUT_NONZERO_ANALOG) {
+		return set_mario_action(m, ACT_HANDSTAND_WALKING, 0);
+	}
+
+    if (m->input & INPUT_A_PRESSED) {
+		play_sound(SOUND_ACTION_TERRAIN_JUMP, m->marioObj->header.gfx.cameraToObject);
+        return set_mario_action(m, ACT_HANDSTAND_JUMP, 0);
+    }
+
+    set_mario_animation(m, MARIO_ANIM_GROUND_HANDSTAND_IDLE);
+	stationary_ground_step(m);
+    return 0;
+}
+
+s32 act_handstand_to_crouch(struct MarioState *m) {
+
+    if (m->input & INPUT_UNKNOWN_10) {
+        return set_mario_action(m, ACT_SHOCKWAVE_BOUNCE, 0);
+    }
+
+    if (m->input & INPUT_OFF_FLOOR) {
+        return set_mario_action(m, ACT_FREEFALL, 0);
+    }
+
+    if (m->input & INPUT_ABOVE_SLIDE) {
+        return set_mario_action(m, ACT_BEGIN_SLIDING, 0);
+    }
+
+	stationary_ground_step(m);
+    set_mario_animation(m, MARIO_ANIM_GROUND_HANDSTAND_OUT);
+    if (is_anim_at_end(m)) {
+        set_mario_action(m, ACT_CROUCHING, 0);
     }
     return 0;
 }
@@ -1157,6 +1294,7 @@ s32 mario_execute_stationary_action(struct MarioState *m) {
         case ACT_HOLD_JUMP_LAND_STOP:     sp24 = act_hold_jump_land_stop(m);              break;
         case ACT_HOLD_FREEFALL_LAND_STOP: sp24 = act_hold_freefall_land_stop(m);          break;
         case ACT_AIR_THROW_LAND:          sp24 = act_air_throw_land(m);                   break;
+        case ACT_SPIN_POUND_LAND:         sp24 = act_spin_pound_land(m);                  break;
         case ACT_LAVA_BOOST_LAND:         sp24 = act_lava_boost_land(m);                  break;
         case ACT_TWIRL_LAND:              sp24 = act_twirl_land(m);                       break;
         case ACT_TRIPLE_JUMP_LAND_STOP:   sp24 = act_triple_jump_land_stop(m);            break;
@@ -1166,6 +1304,8 @@ s32 mario_execute_stationary_action(struct MarioState *m) {
         case ACT_BRAKING_STOP:            sp24 = act_braking_stop(m);                     break;
         case ACT_BUTT_SLIDE_STOP:         sp24 = act_butt_slide_stop(m);                  break;
         case ACT_HOLD_BUTT_SLIDE_STOP:    sp24 = act_hold_butt_slide_stop(m);             break;
+		case ACT_HANDSTAND:				  sp24 = act_handstand(m);						  break;
+		case ACT_HANDSTAND_TO_CROUCH:	  sp24 = act_handstand_to_crouch(m);		  break;
     }
     /* clang-format on */
 

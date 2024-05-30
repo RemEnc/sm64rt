@@ -46,7 +46,6 @@ inline void gfx_rt64_init_geo_layout_maps(std::unordered_map<void *, std::string
     FILL_GEO_MAPS(bowling_ball_geo);
     FILL_GEO_MAPS(bowling_ball_track_geo);
     FILL_GEO_MAPS(bowser_geo);
-    FILL_GEO_MAPS(bowser2_geo);
     FILL_GEO_MAPS(bowser_flames_geo);
     FILL_GEO_MAPS(bowser_key_geo);
     FILL_GEO_MAPS(bowser_key_cutscene_geo);

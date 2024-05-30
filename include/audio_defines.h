@@ -123,6 +123,7 @@
 /* not verified */ #define SOUND_ACTION_UNK5D           0x005D
 /* not verified */ #define SOUND_ACTION_INTRO_UNK45E    SOUND_ARG_LOAD(0, 4, 0x5E, 0x80, 8)
 /* not verified */ #define SOUND_ACTION_INTRO_UNK45F    SOUND_ARG_LOAD(0, 4, 0x5F, 0x80, 8)
+#define SOUND_MARIO_YEEHAW  	                		SOUND_ARG_LOAD(0, 4, 0x70, 0x80, 8)
 
 /* Moving Sound Effects */
 
